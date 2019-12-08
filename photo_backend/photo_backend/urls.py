@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import photo_app
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/upload_photo', photo_app.views.upload_picture)
 ]
