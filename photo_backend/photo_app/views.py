@@ -23,4 +23,3 @@ def upload_picture(request):
     else:
         name = 'Not recognized'
     return JsonResponse({'Name': name})
-

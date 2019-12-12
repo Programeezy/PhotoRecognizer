@@ -19,7 +19,7 @@ export default function App() {
   };
 
   handleUploadPhoto = () => {
-    fetch("http://192.168.100.12:8000/api/upload_photo/", {
+    fetch("http://192.168.43.154:8000/api/upload_photo/", {
       method: "POST",
       body: createFormData(photo),
     })
@@ -63,16 +63,21 @@ getPermissionAsync = async () => {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    {photo && (
-      <React.Fragment>
-        <Image
-          source={{ uri: photo.uri }}
-          style={{ width: 300, height: 300 }}
-        />
-        <Button title="Upload" onPress={this.handleUploadPhoto} />
-      </React.Fragment>
-    )}
-    <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
+      <View style={{justifyContent: 'space-around', bottom:50}}>
+        <Button 
+          title="Choose Photo" 
+          onPress={this.handleChoosePhoto} />
+      </View>
+
+      {photo && (
+        <React.Fragment>
+          <Image
+            source={{ uri: photo.uri }}
+            style={{ width: 300, height: 300}}
+          />
+          <Button title="Upload" onPress={this.handleUploadPhoto} style={{top:100}} />
+        </React.Fragment>
+      )}
 </View>
   );
 }
