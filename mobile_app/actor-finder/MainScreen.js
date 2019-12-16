@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import * as GoogleSignIn from 'expo-google-sign-in';
-
+import * as SecureStore from 'expo-secure-store';
 
 export default function MainScreen(props) {
   const [photo, setPhoto] = useState(null);
@@ -21,9 +21,14 @@ export default function MainScreen(props) {
     return data;
   };
 
-  handleUploadPhoto = () => {
-    fetch("http://192.168.43.154:8000/api/upload_photo/", {
+  handleUploadPhoto = async () => {
+    const authToken = await SecureStore.getItemAsync('auth_token');
+    await fetch("http://192.168.43.154:8000/api/upload_photo/", {
       method: "POST",
+
+      headers: {
+        'Authorization': 'Token ' + authToken,
+      },
       body: createFormData(photo),
     })
       .then(response => response.json())
@@ -51,6 +56,11 @@ export default function MainScreen(props) {
     await _syncUserWithStateAsync();
   }
 
+  handleSignOut = async () => {
+    await SecureStore.deleteItemAsync('auth_token');
+    this.props.navigation.navigate('AuthLoading');
+  }
+
   handleChoosePhoto = async () => {
     let res = await ImagePicker.launchImageLibraryAsync({
       aspect: [4, 3],
@@ -74,7 +84,6 @@ getPermissionAsync = async () => {
 
   useEffect(() => {
     getPermissionAsync();
-    initGoogleAuthAsync();
   })
 
   return (
@@ -83,6 +92,8 @@ getPermissionAsync = async () => {
         <Button 
           title="Choose Photo" 
           onPress={this.handleChoosePhoto} />
+        <Button title="Sign Out" onPress={this.handleSignOut} style={{top: 150}} />
+
       </View>
 
       {photo && (
