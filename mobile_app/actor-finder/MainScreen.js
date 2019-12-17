@@ -25,7 +25,6 @@ export default function MainScreen(props) {
     const authToken = await SecureStore.getItemAsync('auth_token');
     await fetch("http://192.168.43.154:8000/api/upload_photo/", {
       method: "POST",
-
       headers: {
         'Authorization': 'Token ' + authToken,
       },
@@ -58,7 +57,7 @@ export default function MainScreen(props) {
 
   handleSignOut = async () => {
     await SecureStore.deleteItemAsync('auth_token');
-    this.props.navigation.navigate('AuthLoading');
+    props.navigation.navigate('AuthLoading');
   }
 
   handleChoosePhoto = async () => {
