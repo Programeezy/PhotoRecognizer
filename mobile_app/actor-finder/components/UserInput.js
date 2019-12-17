@@ -7,7 +7,6 @@ export default class UserInput extends Component {
   render() {
     return (
       <View >
-        <Image source={this.props.source} />
         <TextInput
           placeholder={this.props.placeholder}
           secureTextEntry={this.props.secureTextEntry}
@@ -15,6 +14,7 @@ export default class UserInput extends Component {
           autoCapitalize={this.props.autoCapitalize}
           returnKeyType={this.props.returnKeyType}
           onChangeText={(text) => this.props.onChangeText(text)}
+          style={styles.input}
         />
       </View>
     );
@@ -35,13 +35,9 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
-    width: DEVICE_WIDTH - 40,
-    height: 40,
-    marginHorizontal: 20,
-    paddingLeft: 45,
-    borderRadius: 20,
-    color: '#ffffff',
+    flex: 1,
+    paddingHorizontal: 10,
+    backgroundColor: '#FFF'
   },
   inputWrapper: {
     flex: 1,
