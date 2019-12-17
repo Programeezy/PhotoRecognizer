@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'photo_app.apps.PhotoAppConfig',
+    'photo_backend.apps.PhotoBackendConfig',
     'rest_framework',
     'rest_framework.authtoken',
 ]
