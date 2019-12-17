@@ -15,10 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
+import photo_app.views
 
-import photo_app
+from photo_app.views import CreateUserAPIView, LogoutUserAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/upload_photo', photo_app.views.upload_picture)
+    path('api/upload_photo/', photo_app.views.upload_picture),
+    path('auth/login/', obtain_auth_token, name='auth_user_login'),
+    path('auth/register/', CreateUserAPIView.as_view(), name='auth_user_create'),
+    path('auth/logout/', LogoutUserAPIView.as_view(), name='auth_user_logout')
 ]

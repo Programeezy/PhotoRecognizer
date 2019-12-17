@@ -4,6 +4,7 @@
     "slug": "actor-finder",
     "privacy": "public",
     "sdkVersion": "35.0.0",
+    "entryPoint": "node_modules/expo/AppEntry.js",
     "platforms": [
       "ios",
       "android",
@@ -21,10 +22,20 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.programeezy.famousfinder",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.847895363894-up2884dnsdqkk6v1qhhun5c1jf1rlqck"
+        }
+      }
+    },
+    "android": {
+      "package": "com.programeezy.famousfinder",
+      "googleServicesFile": "./google-services.json"
     }
   }
 }
