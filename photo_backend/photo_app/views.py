@@ -1,9 +1,10 @@
 import pickle
+from datetime import timedelta, datetime
 
 import face_recognition
 from django.contrib.auth import get_user_model
 from django.forms import model_to_dict
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
@@ -16,6 +17,8 @@ from photo_app.models import Person
 from photo_app.serializers import CreateUserSerializer
 
 from photo_backend.photo_backend.models import SearchResult
+
+WEEK_LIMIT_CONST = 20
 
 
 class CreateUserAPIView(CreateAPIView):
@@ -47,7 +50,17 @@ class LogoutUserAPIView(APIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_picture(request):
-    image = face_recognition.load_image_file(request.FILES['photo'])
+    user = request.user
+    if not user.is_premium:
+        some_day_one_week_ago = datetime.now() - timedelta(days=7)
+        search_results_by_last_week = SearchResult.objects.filter(upload_date__gte=some_day_one_week_ago,
+                                                                  upload_date__lt=datetime.now())
+        if len(search_results_by_last_week) >= WEEK_LIMIT_CONST:
+            return HttpResponseBadRequest()
+    image_for_base = request.FILES['photo']
+    search_result = SearchResult(uploaded_by=request.user, upload_image=image_for_base)
+
+    image = face_recognition.load_image_file(image_for_base)
     known_faces = [(l[0], pickle.loads(l[1])) for l in Person.objects.values_list('name', 'photo_encoding')]
     faces = [l[1] for l in known_faces]
     uploaded_faces = face_recognition.face_encodings(image)
@@ -62,12 +75,14 @@ def upload_picture(request):
             name = known_faces[match][0]
         else:
             name = 'Not recognized'
+        search_result.answer = name
+        search_result.save()
     if len(uploaded_faces) > 1:
         return JsonResponse({'Name': f'There are few faces on photo. {name}'})
     return JsonResponse({'Name': name})
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_search_results(request):
     json_search_results_list = []
