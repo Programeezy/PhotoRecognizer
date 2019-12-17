@@ -2,6 +2,7 @@ import pickle
 
 import face_recognition
 from django.contrib.auth import get_user_model
+from django.forms import model_to_dict
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -13,6 +14,8 @@ from rest_framework.views import APIView
 
 from photo_app.models import Person
 from photo_app.serializers import CreateUserSerializer
+
+from photo_backend.photo_backend.models import SearchResult
 
 
 class CreateUserAPIView(CreateAPIView):
@@ -62,3 +65,15 @@ def upload_picture(request):
     if len(uploaded_faces) > 1:
         return JsonResponse({'Name': f'There are few faces on photo. {name}'})
     return JsonResponse({'Name': name})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_search_results(request):
+    json_search_results_list = []
+    search_results_by_user = SearchResult.objects.filter(user=request.user)
+
+    for search_result in search_results_by_user:
+        json_search_results_list.append(model_to_dict(search_result))
+
+    return JsonResponse(json_search_results_list, safe=False)
