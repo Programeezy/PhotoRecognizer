@@ -77,3 +77,13 @@ def user_search_results(request):
         json_search_results_list.append(model_to_dict(search_result))
 
     return JsonResponse(json_search_results_list, safe=False)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_premium_activate(request):
+    user = request.user
+    user.is_premium = True
+    user.save()
+
+    return JsonResponse({})

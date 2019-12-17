@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/upload_photo/', photo_app.views.upload_picture),
     path('api/search_history/', photo_app.views.user_search_results),
+    path('api/premium_activate/', photo_app.views.user_premium_activate),
     path('auth/login/', obtain_auth_token, name='auth_user_login'),
     path('auth/register/', CreateUserAPIView.as_view(), name='auth_user_create'),
     path('auth/logout/', LogoutUserAPIView.as_view(), name='auth_user_logout')
