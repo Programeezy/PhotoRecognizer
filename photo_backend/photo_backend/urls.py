@@ -21,7 +21,7 @@ import photo_app.views
 
 from photo_app.views import CreateUserAPIView, LogoutUserAPIView
 
-from photo_backend.photo_backend import settings
+from photo_backend import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -33,7 +33,7 @@ export default function MainScreen(props) {
       .then(response => response.json())
       .then(response => {
         console.log("upload success", response);
-        alert(response.Name);
+        response.Name != undefined ?  alert(response.Name) : alert(response.error)
       })
       .catch(error => {
         console.log("upload error", error);
@@ -87,21 +87,20 @@ getPermissionAsync = async () => {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{justifyContent: 'space-around', bottom:50}}>
+      <View style={{flex: 1, justifyContent: 'space-around', bottom:50}}>
         <Button 
+          color="indigo"
           title="Choose Photo" 
           onPress={this.handleChoosePhoto} />
-        <Button title="Sign Out" onPress={this.handleSignOut} style={{top: 150}} />
-
       </View>
 
       {photo && (
         <React.Fragment>
           <Image
             source={{ uri: photo.uri }}
-            style={{ width: 300, height: 300}}
+            style={{ width: 300, height: 300, marginBottom: 30}}
           />
-          <Button title="Upload" onPress={this.handleUploadPhoto} style={{top:100}} />
+          <Button color="indigo" title="Upload" onPress={this.handleUploadPhoto} style={{top:100}} />
         </React.Fragment>
       )}
 </View>

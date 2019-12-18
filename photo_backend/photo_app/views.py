@@ -13,12 +13,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from photo_app.models import Person
+from photo_app.models import Person, SearchResult
 from photo_app.serializers import CreateUserSerializer
 
-from photo_backend.photo_backend.models import SearchResult
 
-WEEK_LIMIT_CONST = 20
+WEEK_LIMIT_CONST = 3
 
 
 class CreateUserAPIView(CreateAPIView):
@@ -56,9 +55,9 @@ def upload_picture(request):
         search_results_by_last_week = SearchResult.objects.filter(upload_date__gte=some_day_one_week_ago,
                                                                   upload_date__lt=datetime.now())
         if len(search_results_by_last_week) >= WEEK_LIMIT_CONST:
-            return HttpResponseBadRequest()
+            return JsonResponse({'error': 'You have reached the limit of searches'})
     image_for_base = request.FILES['photo']
-    search_result = SearchResult(uploaded_by=request.user, upload_image=image_for_base)
+    search_result = SearchResult(uploaded_by=request.user, uploaded_image=image_for_base)
 
     image = face_recognition.load_image_file(image_for_base)
     known_faces = [(l[0], pickle.loads(l[1])) for l in Person.objects.values_list('name', 'photo_encoding')]
@@ -86,12 +85,15 @@ def upload_picture(request):
 @permission_classes([IsAuthenticated])
 def user_search_results(request):
     json_search_results_list = []
-    search_results_by_user = SearchResult.objects.filter(user=request.user)
+    search_results_by_user = SearchResult.objects.filter(uploaded_by=request.user)
 
     for search_result in search_results_by_user:
-        json_search_results_list.append(model_to_dict(search_result))
+        json_search_results_list.append({
+            'answer': search_result.answer,
+            'image': f'http://{request.get_host()}/photos/{search_result.answer}.jpg'
+        })
 
-    return JsonResponse(json_search_results_list, safe=False)
+    return JsonResponse({'searches': json_search_results_list}, safe=False)
 
 
 @api_view(['POST'])
@@ -101,4 +103,4 @@ def user_premium_activate(request):
     user.is_premium = True
     user.save()
 
-    return JsonResponse({})
+    return JsonResponse({'status': 'success'})

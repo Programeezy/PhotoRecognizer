@@ -15,6 +15,7 @@ export default class UserInput extends Component {
           returnKeyType={this.props.returnKeyType}
           onChangeText={(text) => this.props.onChangeText(text)}
           style={styles.input}
+          editable
         />
       </View>
     );

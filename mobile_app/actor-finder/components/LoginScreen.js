@@ -36,6 +36,7 @@ export default class LoginScreen extends Component {
     this.setUsername = this.setUsername.bind(this);
     this.setPassword = this.setPassword.bind(this);
     this.sendAuthRequest = this.sendAuthRequest.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
   }
   
   setUsername(username) {
@@ -52,6 +53,9 @@ export default class LoginScreen extends Component {
       : this.setState({showPass: true, press: false});
   }
 
+  handleRegister() {
+    this.props.navigation.navigate('Register');
+  }
   sendAuthRequest() {
     fetch("http://192.168.43.154:8000/auth/login/", {
         method: "POST",
@@ -66,10 +70,15 @@ export default class LoginScreen extends Component {
       })
         .then(response => response.json())
         .then(response => {
+          if (response.token) {
           console.log("login success", response);
           SecureStore.setItemAsync('auth_token', response.token).then(
             this.props.navigation.navigate('App')
             )
+          }
+          else {
+            alert('Login failed!');
+          }
         })
         .catch(error => {
           console.log("Login error", error);
@@ -122,13 +131,24 @@ export default class LoginScreen extends Component {
               <Image source={eyeImg} style={styles.iconEye} />
             </TouchableOpacity>
           </View>
-          <Button
-          color="indigo" 
-          style={styles.button} 
-          title="Sign In" 
-          onPress={this.sendAuthRequest}/>
+
         </View>
-        <View style={styles.container} />
+        <View style={styles.buttonContainer} >
+          <View style={styles.buttonWrapper}>
+                <Button
+                color="indigo" 
+                style={styles.button} 
+                title="Sign In" 
+                onPress={this.sendAuthRequest}/>
+                </View>
+              <View style={styles.buttonWrapper}>
+                <Button
+                color="indigo" 
+                style={styles.button} 
+                title="Register" 
+                onPress={this.handleRegister}/>
+            </View>
+        </View>
       </KeyboardAvoidingView>
     );
   }
@@ -140,19 +160,29 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column"
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  buttonWrapper: {
+    flex: 1,
+    paddingHorizontal: 10
   },
   wrapper: {
     paddingHorizontal: 15
   },
   btnEye: {
-    position: 'absolute',
-    top: 55,
-    right: 28,
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    marginLeft: 180,
   },
   iconEye: {
     width: 25,
     height: 25,
     tintColor: 'rgba(0,0,0,0.2)',
+    marginBottom:5
   },
   inputWrap: {
     flexDirection: "row",
