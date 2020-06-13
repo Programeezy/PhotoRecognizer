@@ -5,6 +5,9 @@
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "entryPoint": "node_modules/expo/AppEntry.js",
+    "extra": {
+      "hostUrl": "http://192.168.43.154:8000/"
+    },
     "platforms": [
       "ios",
       "android",

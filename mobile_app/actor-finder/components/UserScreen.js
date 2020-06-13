@@ -18,6 +18,7 @@ import UserInput from './UserInput';
 import usernameImg from '../assets/username.png';
 import passwordImg from '../assets/password.png';
 import eyeImg from '../assets/eye_black.png';
+import Constants from 'expo-constants';
 
 export default class UserScreen extends Component {
   static navigationOptions = {
@@ -51,7 +52,7 @@ export default class UserScreen extends Component {
 
   async handleBuyPremium() {
     const authToken = await SecureStore.getItemAsync('auth_token');
-    fetch("http://192.168.43.154:8000/api/premium_activate/", {
+    fetch(`${Constants.manifest.hostUrl}api/premium_activate/`, {
         method: "POST",
         headers: {
             'Authorization': 'Token ' + authToken,

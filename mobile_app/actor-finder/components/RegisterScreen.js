@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Dimensions from 'Dimensions';
 import * as SecureStore from 'expo-secure-store';
+import Constants from 'expo-constants'
 
 import {
   StyleSheet,
@@ -52,7 +53,7 @@ export default class RegisterScreen extends Component {
   }
 
   sendAuthRequest() {
-    fetch("http://192.168.43.154:8000/auth/register/", {
+    fetch(`http://${Constants.manifest.hostUrl}auth/register/`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'

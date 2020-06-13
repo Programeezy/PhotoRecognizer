@@ -5,6 +5,8 @@ import * as Permissions from 'expo-permissions';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import * as SecureStore from 'expo-secure-store';
 
+import Constants from 'expo-constants';
+
 export default function MainScreen(props) {
   const [photo, setPhoto] = useState(null);
   const [user, setUser] = useState(null);
@@ -23,7 +25,7 @@ export default function MainScreen(props) {
 
   handleUploadPhoto = async () => {
     const authToken = await SecureStore.getItemAsync('auth_token');
-    await fetch("http://192.168.43.154:8000/api/upload_photo/", {
+    await fetch(`${Constants.manifest.extra.hostUrl}api/upload_photo/`, {
       method: "POST",
       headers: {
         'Authorization': 'Token ' + authToken,
