@@ -1,5 +1,6 @@
 
 # Created by https://www.gitignore.io/api/reactnative,intellij,android,osx,xcode
+media
 venv
 __pycache__
 *.sqlite3
